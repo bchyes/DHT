@@ -6,14 +6,14 @@ type dhtNode interface {
 
 	/* "Create" and "Join" are called after calling "Run". */
 	/* For a dhtNode, either "Create" or "Join" will be called, but not both. */
-	Create()               /* Create a new network. */
-	Join(addr string) bool /* Join an existing network. Return "true" if join succeeded and "false" if not. */
+	Create()                      /* Create a new network. */
+	Join(addr string, j int) bool /* Join an existing network. Return "true" if join succeeded and "false" if not. */
 
 	/* Quit from the network it is currently in.*/
 	/* "Quit" will not be called before "Create" or "Join". */
 	/* For a dhtNode, "Quit" may be called for many times. */
 	/* For a quited node, call "Quit" again should have no effect. */
-	Quit()
+	Quit(i int)
 
 	/* Chord offers a way of "normal" quitting. */
 	/* For "force quit", the node quit the network without informing other nodes. */

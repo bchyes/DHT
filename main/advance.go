@@ -46,7 +46,7 @@ func forceQuitTest() (bool, int, int) {
 	_, _ = cyan.Printf("Start joining\n")
 	for i := 1; i <= forceQuitNodeSize; i++ {
 		addr := nodeAddresses[rand.Intn(i)]
-		if !nodes[i].Join(addr) {
+		if !nodes[i].Join(addr, i) {
 			joinInfo.fail()
 		} else {
 			joinInfo.success()
@@ -114,7 +114,7 @@ func forceQuitTest() (bool, int, int) {
 
 	/* All nodes quit. */
 	for i := 0; i <= forceQuitNodeSize; i++ {
-		nodes[i].Quit()
+		nodes[i].Quit(i)
 	}
 
 	return panicked, forceQuitFailedCnt, forceQuitTotalCnt
@@ -158,8 +158,9 @@ func quitAndStabilizeTest() (bool, int, int) {
 	nodesInNetwork = append(nodesInNetwork, 0)
 	_, _ = cyan.Printf("Start joining\n")
 	for i := 1; i <= QASNodeSize; i++ {
+
 		addr := nodeAddresses[rand.Intn(i)]
-		if !nodes[i].Join(addr) {
+		if !nodes[i].Join(addr, i) {
 			joinInfo.fail()
 		} else {
 			joinInfo.success()
@@ -202,7 +203,7 @@ func quitAndStabilizeTest() (bool, int, int) {
 		/* Quit. */
 		idxInArray := rand.Intn(len(nodesInNetwork))
 
-		nodes[nodesInNetwork[idxInArray]].Quit()
+		nodes[nodesInNetwork[idxInArray]].Quit(t)
 		nodesInNetwork = removeFromArray(nodesInNetwork, idxInArray)
 
 		time.Sleep(QASQuitSleepTime)
@@ -227,7 +228,7 @@ func quitAndStabilizeTest() (bool, int, int) {
 
 	/* All nodes quit. */
 	for i := 0; i <= QASNodeSize; i++ {
-		nodes[i].Quit()
+		nodes[i].Quit(i)
 	}
 
 	return panicked, QASFailedCnt, QASTotalCnt

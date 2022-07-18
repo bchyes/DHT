@@ -53,7 +53,7 @@ func basicTest() (bool, int, int) {
 		_, _ = cyan.Printf("Start joining (round %d)\n", t)
 		for j := 1; j <= basicTestRoundJoinNodeSize; j++ {
 			addr := nodeAddresses[nodesInNetwork[rand.Intn(len(nodesInNetwork))]]
-			if !nodes[nextJoinNode].Join(addr) {
+			if !nodes[nextJoinNode].Join(addr, j) {
 				joinInfo.fail()
 			} else {
 				joinInfo.success()
@@ -64,7 +64,6 @@ func basicTest() (bool, int, int) {
 			nextJoinNode++
 		}
 		joinInfo.finish(&basicFailedCnt, &basicTotalCnt)
-
 		time.Sleep(basicTestAfterJoinQuitSleepTime)
 
 		/* Put, part 1. */
@@ -137,7 +136,7 @@ func basicTest() (bool, int, int) {
 		for i := 1; i <= basicTestRoundQuitNodeSize; i++ {
 			idxInArray := rand.Intn(len(nodesInNetwork))
 
-			nodes[nodesInNetwork[idxInArray]].Quit()
+			nodes[nodesInNetwork[idxInArray]].Quit(i)
 			nodesInNetwork = removeFromArray(nodesInNetwork, idxInArray)
 
 			time.Sleep(basicTestJoinQuitSleepTime)
@@ -210,10 +209,10 @@ func basicTest() (bool, int, int) {
 		}
 		delete2Info.finish(&basicFailedCnt, &basicTotalCnt)
 	}
-
+	//os.Exit(0)
 	/* All nodes quit. */
 	for i := 0; i <= basicTestNodeSize; i++ {
-		nodes[i].Quit()
+		nodes[i].Quit(i)
 	}
 
 	return panicked, basicFailedCnt, basicTotalCnt

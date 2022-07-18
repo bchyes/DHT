@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"github.com/sirupsen/logrus"
+	"io"
 	"math/rand"
 	"os"
 	"time"
@@ -13,9 +15,16 @@ var (
 )
 
 func init() {
+	f, _ := os.OpenFile("fmt.log", os.O_WRONLY|os.O_CREATE|os.O_SYNC|os.O_APPEND, 0755)
+
+	os.Stdout = f
+
+	os.Stderr = f
+	mw := io.MultiWriter(os.Stdout, f)
+	logrus.SetOutput(mw)
 	flag.BoolVar(&help, "help", false, "help")
 	flag.StringVar(&testName, "test", "", "which test(s) do you want to run: basic/advance/all")
-	testName = "basic"
+	testName = "advance"
 	flag.Usage = usage
 	flag.Parse()
 

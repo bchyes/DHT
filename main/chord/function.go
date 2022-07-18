@@ -15,6 +15,11 @@ var (
 	waitTime     time.Duration
 )
 
+type Pair struct {
+	Key   string
+	Value string
+}
+
 func init() {
 	localAddress = GetLocalAddress()
 	base = big.NewInt(2)
@@ -59,4 +64,24 @@ func GetLocalAddress() string {
 	}
 
 	return localaddress
+}
+func Contain(target, begin, end *big.Int, mode bool) bool {
+	if end.Cmp(begin) > 0 {
+		if mode {
+			return end.Cmp(target) == 0 || (target.Cmp(begin) > 0 && target.Cmp(end) < 0)
+		} else {
+			return target.Cmp(begin) > 0 && target.Cmp(end) < 0
+		}
+	} else {
+		if mode {
+			return end.Cmp(target) == 0 || target.Cmp(begin) > 0 || target.Cmp(end) < 0
+		} else {
+			return target.Cmp(begin) > 0 || target.Cmp(end) < 0
+		}
+	}
+}
+func CalculateID(raw *big.Int, pow int) *big.Int {
+	d := new(big.Int).Exp(base, big.NewInt(int64(pow)), calculateMod)
+	ans := new(big.Int).Add(raw, d)
+	return new(big.Int).Mod(ans, calculateMod)
 }
